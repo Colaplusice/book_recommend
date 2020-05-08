@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block  right-panel-content %}
+<body>
+<ul class="breadcrumb">
+	<li><a href="{% url 'message_boards' %}">帖子</a></li>
+	<li><a href="{% url 'get_message_board' msg_board.id %}">{{ msg_board.title }}</a></li>
+	<li class="active">帖子详情页面</li>
+</ul>
+	  <div class="container">
+		  <div class="row text-center h3">{{ msg_board.title }}</div>
+		   <div class="row h5">
+			  发帖人:<span>{{ msg_board.user.name }}</span>
+			  数量:<span>{{ msg_board.boardcomment_set.count }}</span>
+		  </div>
+		  <div class="row h5">{{ msg_board.create_time }}</div>
+		     <div class="row h5">
+			     {{ msg_board.content }}
+		  </div>
+   </div>
+<!---评论区------>
+
+<table class="table" >
+  <caption>回帖区</caption>
+  {% for comment in board_comments%}
+    <tr>
+	    <td rowspan="3">{{ comment.user.name }}</td>
+      <td>回复内容:</td>
+    </tr>
+    <tr>
+	    <td>{{ comment.content }}</td>
+    </tr>
+	 <tr>
+		 <td>{{ comment.create_time }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!---写评论------>
+<form role="form" action="{% url 'new_board_comment' msg_board.id %}" method='post'>
+	{% csrf_token %}
+	<div class="form-group">
+		<label for="name">写评论</label>
+		<input type="text" class="form-control" name="content" placeholder="写下您的评论....">
+	</div>
+	<button class="btn btn-default" type="submit">提交</button>
+ </form>
+ {% endblock %}
